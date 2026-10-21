@@ -73,7 +73,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.x-dev"
+            "dev-main": "2.1.x-dev"
         },
         "laminas": {
             "config-provider": "Contenir\\Workflow\\ConfigProvider"
