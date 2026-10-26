@@ -38,3 +38,31 @@ $app->pipe(Mezzio\Router\Middleware\RouteMiddleware::class);
 
 Use this when building the routes at container creation is too early, for
 example when the database is not available to CLI tools.
+
+## Additional routes
+
+A workflow routes its resource at one address, under the route named by
+`getRouteId()`. A workflow that implements `AdditionalRoutesInterface` routes
+it at more, each under the name its route config gives, registered after its
+own:
+
+```php
+final class WorkWorkflow extends AbstractPageWorkflow implements AdditionalRoutesInterface
+{
+    protected ?string $middleware = WorkHandler::class;
+
+    public function getAdditionalRouteConfigs(): array
+    {
+        $own = $this->getRouteConfig();
+
+        return null === $own ? [] : [
+            [...$own, 'path' => "{$own['path']}/:category", 'name' => "{$own['name']}-category"],
+        ];
+    }
+}
+```
+
+Prefer additional routes to optional parts such as `/work[/:category]`. Mezzio
+routes each workflow route by request method, and the router cannot build an
+address that leaves an optional part out once it does, so `/work` could not be
+linked to by its name.

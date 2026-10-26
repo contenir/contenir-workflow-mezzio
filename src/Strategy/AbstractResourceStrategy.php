@@ -201,8 +201,8 @@ abstract class AbstractResourceStrategy implements ResourceStrategyInterface
     }
 
     /**
-     * Recursively process resources, collecting routes and returning the
-     * navigation pages.
+     * Recursively process resources, collecting routes, with the additional
+     * routes of a workflow that has them, and returning the navigation pages.
      *
      * @param iterable<ResourceInterface> $resources
      * @param list<array<string, mixed>> $pages
@@ -215,10 +215,8 @@ abstract class AbstractResourceStrategy implements ResourceStrategyInterface
     {
         foreach ($resources as $resource) {
             $workflow = $this->getResourceWorkflow($resource);
-            $config   = $workflow->getRouteConfig();
-
-            if (null !== $config) {
-                $this->resources['route'][$workflow->getRouteId()] = $config;
+            foreach (WorkflowRoutes::of($workflow) as $name => $route) {
+                $this->resources['route'][$name] = $route;
             }
 
             $page     = $this->getNavigationPage($workflow);
