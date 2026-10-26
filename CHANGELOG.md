@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `AdditionalRoutesInterface`, for a workflow that routes its resource at more addresses than
+  its own route, such as a listing filtered by category. Each additional route is registered
+  beside the resource's own under the name it gives, so it can be linked to by name.
+
 ## [2.1.0] - 2026-10-05
 
 ### Changed

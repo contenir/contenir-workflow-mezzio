@@ -12,6 +12,7 @@ use Contenir\Workflow\Tests\TestAsset\Resource\ResourceFactory;
 use Contenir\Workflow\Tests\TestAsset\Strategy\TracingResourceStrategy;
 use Contenir\Workflow\Tests\TestAsset\Strategy\TypedResourceStrategy;
 use Contenir\Workflow\Tests\TestAsset\Workflow\ConfigurableWorkflow;
+use Contenir\Workflow\Tests\TestAsset\Workflow\ListingWorkflow;
 use Contenir\Workflow\Tests\Trait\InMemoryCacheTrait;
 use Contenir\Workflow\Workflow\PageWorkflow;
 use Contenir\Workflow\Workflow\WorkflowInterface;
@@ -127,6 +128,27 @@ final class ResourceStrategyTest extends TestCase
     }
 
     #[Test]
+    public function buildsTheAdditionalRoutesOfAWorkflowThatHasThemAfterItsOwn(): void
+    {
+        $strategy = $this->strategy([
+            ResourceFactory::page(1, 'work'),
+            ResourceFactory::page(2, 'news'),
+        ], new ListingWorkflow());
+
+        static::assertSame(
+            [
+                'page-1'          => '/work',
+                'page-1-category' => '/work/:category',
+                'page-1-item'     => '/work/:category/:item',
+                'page-2'          => '/news',
+                'page-2-category' => '/news/:category',
+                'page-2-item'     => '/news/:category/:item',
+            ],
+            array_column($strategy->getRouteConfig(), 'path', 'name'),
+        );
+    }
+
+    #[Test]
     public function cachesTheBuiltRoutesAndNavigation(): void
     {
         $repository = new InMemoryResourceAdapter([ResourceFactory::page(1, 'about')]);
@@ -188,6 +210,17 @@ final class ResourceStrategyTest extends TestCase
         $strategy = $this->strategy([new FakeResource()], $workflow);
 
         static::assertFalse($strategy->getNavigationConfig()[0]['visible']);
+    }
+
+    #[Test]
+    public function keysEachAdditionalRouteByItsName(): void
+    {
+        $strategy = $this->strategy([ResourceFactory::page(1, 'work')], new ListingWorkflow());
+
+        static::assertSame(
+            ['page-1', 'page-1-category', 'page-1-item'],
+            array_keys($strategy->getRouteConfig()),
+        );
     }
 
     #[Test]
