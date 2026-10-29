@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `workflow_manager.workflows`: plugin manager config (`factories`, `aliases`,
+  `invokables`) the `WorkflowPluginManagerFactory` adds to the package's page
+  workflow, so a site registers its own workflows in config rather than
+  replacing the factory.
+
 ## [2.2.0] - 2026-10-27
 
 ### Added

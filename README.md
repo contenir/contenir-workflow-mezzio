@@ -88,6 +88,12 @@ return [
         'repository' => PageRepositoryAdapter::class,
         'cache'      => 'FilesystemCache',
         'cache_key'  => 'WorkflowResourceCache',
+        // Optional: the site's own workflows, as plugin manager config. A
+        // resource's workflow column names one of the aliases.
+        'workflows'  => [
+            'factories' => [App\Workflow\NewsWorkflow::class => Contenir\Workflow\Workflow\WorkflowFactory::class],
+            'aliases'   => ['news' => App\Workflow\NewsWorkflow::class],
+        ],
     ],
     'dependencies' => [
         'delegators' => [
