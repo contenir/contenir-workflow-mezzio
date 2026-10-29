@@ -81,6 +81,20 @@ final readonly class WorkflowConfig
     }
 
     /**
+     * A nested section, or an empty one when the key is missing or not an array.
+     *
+     * @return array<array-key, mixed>
+     *
+     * @mago-expect analysis:mixed-assignment Config values are untyped; the type is checked here.
+     */
+    public function section(string $key): array
+    {
+        $value = $this->values[$key] ?? null;
+
+        return is_array($value) ? $value : [];
+    }
+
+    /**
      * @mago-expect analysis:mixed-assignment Config values are untyped; the type is checked here.
      */
     public function stringOr(string $key, string $default): string
